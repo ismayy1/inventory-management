@@ -1,0 +1,35 @@
+# =========================
+# React / Node
+# =========================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# Environment variables
+frontend/.env
+backend/.env
+
+# =========================
+# Spring Boot / Maven
+# =========================
+backend/target/
+
+# Maven wrapper jar (optional)
+# backend/.mvn/wrapper/maven-wrapper.jar
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Operating System
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+*.log
