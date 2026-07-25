@@ -1,5 +1,6 @@
 package com.stocktrack.backend.service.impl;
 
+import com.stocktrack.backend.backup.exception.PurchaseOrderNotFoundException;
 import com.stocktrack.backend.dto.request.CreatePurchaseOrderRequest;
 import com.stocktrack.backend.dto.request.PurchaseOrderItemRequest;
 import com.stocktrack.backend.dto.response.PurchaseOrderDetailsResponse;
@@ -135,7 +136,7 @@ public class PurchaseOrderService {
     public PurchaseOrderDetailsResponse getById(Long id) {
 
         PurchaseOrder po = purchaseOrderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("PO not found"));
+                .orElseThrow(() -> new PurchaseOrderNotFoundException(id));
 
         List<PurchaseOrderItem> items =
                 purchaseOrderItemRepository.findByPurchaseOrderId(id);
