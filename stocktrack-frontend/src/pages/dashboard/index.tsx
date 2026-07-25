@@ -5,11 +5,11 @@ import { StatCard } from "@/components/dashboard/stat-card"
 import { DataTable } from "@/components/dashboard/data-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { productApi, transactionApi, supplierApi, stockAdjustmentApi, dashboardApi, type Product, type Supplier, type Transaction, type StockAdjustment, type OverstockItem, type InventoryClassifiedItem } from "@/lib/api"
-import { Package, AlertTriangle, Users, TrendingUp, Box, PieChart as PieChartIcon, ChevronDown, ChevronUp } from "lucide-react"
+// import { Button } from "@/components/ui/button"
+import { productApi, transactionApi, supplierApi, stockAdjustmentApi, dashboardApi, type Product, type Transaction, type StockAdjustment, type OverstockItem, type InventoryClassifiedItem } from "@/lib/api"
+import { Package, AlertTriangle, Users, TrendingUp, Box, PieChart as PieChartIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { PieChart, Pie, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { analyticsApi } from "@/lib/api"
 
 const transactionTypeLabels: Record<string, string> = {
@@ -51,12 +51,12 @@ const TransactionBadge = ({ type }: { type?: string }) => {
     return <Badge variant={variant}>{displayLabel}</Badge>
 }
 
-function formatCategory(name: string) {
-    return name
-        .toLowerCase()
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase())
-}
+// function _formatCategory(name: string) {
+//     return name
+//         .toLowerCase()
+//         .replace(/_/g, " ")
+//         .replace(/\b\w/g, (c) => c.toUpperCase())
+// }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82ca9d', '#ffc658']
 
@@ -200,33 +200,33 @@ export default function DashboardPage() {
         ]
     }, [products])
 
-    const supplierOverviewData = useMemo(() => {
-        if (!activeSuppliers) return []
-        const productCountBySupplier = new Map<number, number>()
-        products?.forEach((product: Product) => {
-            productCountBySupplier.set(
-                product.supplierId,
-                (productCountBySupplier.get(product.supplierId) || 0) + 1,
-            )
-        })
+    // const supplierOverviewData = useMemo(() => {
+    //     if (!activeSuppliers) return []
+    //     const productCountBySupplier = new Map<number, number>()
+    //     products?.forEach((product: Product) => {
+    //         productCountBySupplier.set(
+    //             product.supplierId,
+    //             (productCountBySupplier.get(product.supplierId) || 0) + 1,
+    //         )
+    //     })
 
-        return activeSuppliers
-            .map((supplier: Supplier) => {
-                const productCount = productCountBySupplier.get(supplier.id) ?? 0
-                const ageDays = Math.max(
-                    0,
-                    Math.floor((Date.now() - new Date(supplier.createdAt).getTime()) / (1000 * 60 * 60 * 24)),
-                )
-                const fill = ageDays > 365 ? '#0088FE' : ageDays > 180 ? '#00C49F' : '#FFBB28'
-                return {
-                    name: supplier.name,
-                    products: productCount,
-                    tenureDays: ageDays,
-                    fill,
-                }
-            })
-            .sort((a: { tenureDays: number }, b: { tenureDays: number }) => b.tenureDays - a.tenureDays)
-    }, [activeSuppliers, products])
+    //     return activeSuppliers
+    //         .map((supplier: Supplier) => {
+    //             const productCount = productCountBySupplier.get(supplier.id) ?? 0
+    //             const ageDays = Math.max(
+    //                 0,
+    //                 Math.floor((Date.now() - new Date(supplier.createdAt).getTime()) / (1000 * 60 * 60 * 24)),
+    //             )
+    //             const fill = ageDays > 365 ? '#0088FE' : ageDays > 180 ? '#00C49F' : '#FFBB28'
+    //             return {
+    //                 name: supplier.name,
+    //                 products: productCount,
+    //                 tenureDays: ageDays,
+    //                 fill,
+    //             }
+    //         })
+    //         .sort((a: { tenureDays: number }, b: { tenureDays: number }) => b.tenureDays - a.tenureDays)
+    // }, [activeSuppliers, products])
 
     const adjustmentTypeData = useMemo(() => {
         if (!allStockAdjustments || !Array.isArray(allStockAdjustments)) return []
@@ -407,7 +407,7 @@ export default function DashboardPage() {
     const [isLowStockTableHighlighted, setIsLowStockTableHighlighted] = useState(false)
     const [isOverStockTableHighlighted, setIsOverStockTableHighlighted] = useState(false)
     const [isInStockTableHighlighted, setIsInStockTableHighlighted] = useState(false)
-    const [showAllSuppliers, setShowAllSuppliers] = useState(false)
+    // const [showAllSuppliers, setShowAllSuppliers] = useState(false)
     const highlightTimerRef = useRef<number | null>(null)
 
     const handleLowStockStatClick = () => {

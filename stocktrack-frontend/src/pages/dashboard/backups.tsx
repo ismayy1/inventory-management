@@ -46,17 +46,19 @@ function resolveFilename(backup: BackupInfo): string {
 //     if (raw == null) return undefined
 //     return Number(raw)
 // }
-function resolveSize(backup: BackupInfo): string {
-    return (
-        backup.sizeHumanReadable ??
-        backup.size ??
-        backup.fileSize ??
-        backup.sizeInBytes?.toString() ??
-        backup.fileSizeBytes?.toString() ??
-        backup.bytes?.toString() ??
-        "Unknown"
-    )
-}
+
+
+// function _resolveSize(backup: BackupInfo): string {
+//     return (
+//         backup.sizeHumanReadable ??
+//         backup.size ??
+//         backup.fileSize ??
+//         backup.sizeInBytes?.toString() ??
+//         backup.fileSizeBytes?.toString() ??
+//         backup.bytes?.toString() ??
+//         "Unknown"
+//     )
+// }
 
 // Resolve creation date from any possible field name
 function resolveDate(backup: BackupInfo): string | undefined {
