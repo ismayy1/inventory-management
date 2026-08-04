@@ -73,25 +73,27 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                // 1. CORS filter must run FIRST before authorization filters
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .cors(Customizer.withDefaults()) // enable CORS with defaults
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/api/test/**").permitAll()
-                    .requestMatchers("/api/health").permitAll() // for health check
-                    .requestMatchers(HttpMethod.GET, "/api/health").permitAll() // for live health check
-                    .requestMatchers("/h2-console/**").permitAll() // dev only
-                    .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll() // allow public access to uploaded files
-                    .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers("/api/health").permitAll() // for health check
+                        .requestMatchers(HttpMethod.GET, "/api/health").permitAll() // for live health check
+                        .requestMatchers("/h2-console/**").permitAll() // dev only
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll() // allow public access to uploaded files
+                        .anyRequest().authenticated()
                 );
 
         http.authenticationProvider(authenticationProvider());
+        // Custom JWT filter added here
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
-//         H2 console support
+        // H2 console support
         http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
