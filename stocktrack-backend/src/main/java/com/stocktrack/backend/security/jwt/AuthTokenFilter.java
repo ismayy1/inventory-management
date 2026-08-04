@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -26,6 +27,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final UserDetailsServiceImpl userDetailsService;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Autowired
     private JwtDenyListService jwtDenyListService;
@@ -36,6 +38,32 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     ) {
         this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
+    }
+
+    /**
+     * Skip JWT filtering completely for preflight OPTIONS requests and public endpoints.
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getServletPath();
+
+        return "OPTIONS".equalsIgnoreCase(request.getMethod())
+                || "/".equals(path)
+                || pathMatcher.match("/api/auth/**", path)
+                || pathMatcher.match("/api/test/**", path)
+                || pathMatcher.match("/api/health", path)
+                || pathMatcher.match("/h2-console/**", path)
+                || (pathMatcher.match("/uploads/**", path) && "GET".equalsIgnoreCase(request.getMethod()));
+    }
+
+    @Override
+    protected boolean shouldNotFilterAsyncDispatch() {
+        return false;
+    }
+
+    @Override
+    protected boolean shouldNotFilterErrorDispatch() {
+        return false;
     }
 
     @Override
